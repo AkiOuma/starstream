@@ -1,6 +1,10 @@
 package frame
 
-import "github.com/AkiOuma/starstream/internal/starstream/definition"
+import (
+	"strings"
+
+	"github.com/AkiOuma/starstream/internal/starstream/definition"
+)
 
 type Frame struct {
 	*ServiceInfo
@@ -9,19 +13,26 @@ type Frame struct {
 }
 
 type ServiceInfo struct {
-	Name        string
-	Destination string
-	Version     string
-	Type        string
+	Name             string
+	Destination      string
+	Version          string
+	Type             string
+	BriefServiceName string
 }
 
 func NewFrame(def *definition.Definition) *Frame {
 	f := &Frame{}
+	briefServiceName := ""
+	list := strings.Split(def.ServiceName, "/")
+	if len(list) > 0 {
+		briefServiceName = list[len(list)-1]
+	}
 	f.ServiceInfo = &ServiceInfo{
-		Name:        def.ServiceName,
-		Destination: def.Destination,
-		Version:     def.ApiVersion,
-		Type:        def.Type,
+		Name:             def.ServiceName,
+		Destination:      def.Destination,
+		Version:          def.ApiVersion,
+		Type:             def.Type,
+		BriefServiceName: briefServiceName,
 	}
 	f.Entity = make([]*Entity, 0, len(def.Entity))
 	f.Proto = make([]*Proto, 0, len(def.Entity))
@@ -39,7 +50,7 @@ func NewFrame(def *definition.Definition) *Frame {
 		entity.Usecase = usecase
 
 		proto := NewProto(entity, f.ServiceInfo)
-		protoQuerier := NewProtoQuerier(v)
+		protoQuerier := NewProtoQuerier(proto)
 		proto.Querier = protoQuerier
 
 		f.Entity = append(f.Entity, entity)

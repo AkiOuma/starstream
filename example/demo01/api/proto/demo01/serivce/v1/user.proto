@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package demo01.serivce.v1;
+
+option go_package = "demo01/serivce/v1";
+
+import "google/protobuf/timestamp.proto";
+
+message User {
+	int32	id = 1;
+	string	name = 2;
+	double	height = 3;
+	int32	group = 4;
+	google.protobuf.Timestamp	createdAt = 5;
+	google.protobuf.Timestamp	updatedAt = 6;
+}
+
+message UserQuerier {
+	repeated int32	id = 1;
+	int32	idLower = 2;
+	int32	idUpper = 3;
+	repeated string	name = 4;
+	string	Searchname = 5;
+	double	heightLower = 6;
+	double	heightUpper = 7;
+	repeated int32	group = 8;
+	int32	groupLower = 9;
+	int32	groupUpper = 10;
+	google.protobuf.Timestamp	createdAtLower = 11;
+	google.protobuf.Timestamp	createdAtUpper = 12;
+	google.protobuf.Timestamp	updatedAtLower = 13;
+	google.protobuf.Timestamp	updatedAtUpper = 14;
+}

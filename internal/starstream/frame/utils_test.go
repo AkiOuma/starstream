@@ -15,7 +15,7 @@ func TestPublicName(t *testing.T) {
 }
 
 func getDef() *definition.Definition {
-	dir := "/root/tool/go/flame/starstream/test/definition.yaml"
+	dir := "/root/tool/go/flame/starstream/example/demo01/definition.yaml"
 	d, err := definition.ReadDefinition(dir)
 	if err != nil {
 		log.Fatal(err)

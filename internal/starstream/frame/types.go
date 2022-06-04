@@ -14,11 +14,11 @@ var goTypeMapper = map[string]*dataType{
 }
 
 var protoTypeMapper = map[string]*dataType{
-	"int":    {TypeName: "int32", ImportPackage: ""},
-	"string": {TypeName: "string", ImportPackage: ""},
-	"float":  {TypeName: "float64", ImportPackage: ""},
-	"bool":   {TypeName: "bool", ImportPackage: ""},
-	"time":   {TypeName: "google.protobuf.Timestamp", ImportPackage: "google/protobuf/timestamp.proto"},
+	"int":       {TypeName: "int32", ImportPackage: ""},
+	"string":    {TypeName: "string", ImportPackage: ""},
+	"float64":   {TypeName: "double", ImportPackage: ""},
+	"bool":      {TypeName: "bool", ImportPackage: ""},
+	"time.Time": {TypeName: "google.protobuf.Timestamp", ImportPackage: "google/protobuf/timestamp.proto"},
 }
 
 func ConvertGoType(origin string) *dataType {

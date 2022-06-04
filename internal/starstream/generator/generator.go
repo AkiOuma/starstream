@@ -96,5 +96,14 @@ func (g *Generator) buildDomain() error {
 			log.Fatalf("ERROR: Generate service %s failed because: %v", v.Usecase.FilePath, err)
 		}
 	}
+	for _, v := range g.frame.Proto {
+		folder := filepath.Dir(v.FilePath)
+		if err := os.MkdirAll(folder, os.ModePerm); err != nil {
+			log.Fatalf("ERROR: Generate %s failed because: %v", folder, err)
+		}
+		if err := g.buildProto(v); err != nil {
+			log.Fatalf("ERROR: Generate service %s failed because: %v", v.FilePath, err)
+		}
+	}
 	return nil
 }

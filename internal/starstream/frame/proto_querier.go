@@ -1,9 +1,5 @@
 package frame
 
-import (
-	"github.com/AkiOuma/starstream/internal/starstream/definition"
-)
-
 type ProtoQuerier struct {
 	Name  string
 	Field []*ProtoQuerierField
@@ -15,80 +11,64 @@ type ProtoQuerierField struct {
 	Type string
 }
 
-func NewProtoQuerier(def *definition.Entity) *ProtoQuerier {
+func NewProtoQuerier(proto *Proto) *ProtoQuerier {
 	q := &ProtoQuerier{}
-	q.Name = GetPublicName(def.Name) + "Querier"
-	q.Field = make([]*ProtoQuerierField, 0, len(def.Field))
+	q.Name = GetPublicName(proto.Name) + "Querier"
+	q.Field = make([]*ProtoQuerierField, 0, len(proto.Field))
 	i := 0
-	for _, v := range def.Field {
+	for _, v := range proto.Field {
 		switch v.Type {
-		case "int":
-			fieldType := ConvertProtoType(v.Type)
-			if fieldType == nil {
-				continue
-			}
+		case "int32":
 			q.Field = append(q.Field, &ProtoQuerierField{
 				Id:   i + 1,
 				Name: v.Name,
-				Type: "repeated " + fieldType.TypeName,
+				Type: "repeated int32",
 			})
 			q.Field = append(q.Field, &ProtoQuerierField{
 				Id:   i + 2,
 				Name: v.Name + "Lower",
-				Type: fieldType.TypeName,
+				Type: "int32",
 			})
 			q.Field = append(q.Field, &ProtoQuerierField{
 				Id:   i + 3,
 				Name: v.Name + "Upper",
-				Type: fieldType.TypeName,
+				Type: "int32",
 			})
 			i += 3
 		case "string":
-			fieldType := ConvertProtoType(v.Type)
-			if fieldType == nil {
-				continue
-			}
 			q.Field = append(q.Field, &ProtoQuerierField{
 				Id:   i + 1,
-				Name: "repeated " + v.Name,
-				Type: fieldType.TypeName,
+				Name: v.Name,
+				Type: "repeated string",
 			})
 			q.Field = append(q.Field, &ProtoQuerierField{
 				Id:   i + 2,
 				Name: "Search" + v.Name,
-				Type: fieldType.TypeName,
+				Type: "string",
 			})
 			i += 2
-		case "time":
-			fieldType := ConvertProtoType(v.Type)
-			if fieldType == nil {
-				continue
-			}
+		case "google.protobuf.Timestamp":
 			q.Field = append(q.Field, &ProtoQuerierField{
 				Id:   i + 1,
 				Name: v.Name + "Lower",
-				Type: fieldType.TypeName,
+				Type: "google.protobuf.Timestamp",
 			})
 			q.Field = append(q.Field, &ProtoQuerierField{
 				Id:   i + 2,
 				Name: v.Name + "Upper",
-				Type: fieldType.TypeName,
+				Type: "google.protobuf.Timestamp",
 			})
 			i += 2
-		case "float":
-			fieldType := ConvertProtoType(v.Type)
-			if fieldType == nil {
-				continue
-			}
+		case "double":
 			q.Field = append(q.Field, &ProtoQuerierField{
 				Id:   i + 1,
 				Name: v.Name + "Lower",
-				Type: fieldType.TypeName,
+				Type: "double",
 			})
 			q.Field = append(q.Field, &ProtoQuerierField{
 				Id:   i + 2,
 				Name: v.Name + "Upper",
-				Type: fieldType.TypeName,
+				Type: "double",
 			})
 			i += 2
 		case "bool":
@@ -99,7 +79,7 @@ func NewProtoQuerier(def *definition.Entity) *ProtoQuerier {
 			q.Field = append(q.Field, &ProtoQuerierField{
 				Id:   i + 1,
 				Name: v.Name,
-				Type: fieldType.TypeName,
+				Type: "int32",
 			})
 		}
 	}
