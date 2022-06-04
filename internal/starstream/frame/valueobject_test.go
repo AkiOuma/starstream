@@ -7,8 +7,12 @@ import (
 
 func TestNewValueObject(t *testing.T) {
 	def := getDef()
+	info := &ServiceInfo{
+		Name:        def.ServiceName,
+		Destination: def.Destination,
+	}
 	for _, v := range def.Entity {
-		e := NewValueObject(v, def.ServiceName, def.Destination)
+		e := NewValueObject(v, info)
 		log.Printf("%v", e)
 	}
 }

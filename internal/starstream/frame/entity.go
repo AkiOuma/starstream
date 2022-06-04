@@ -26,11 +26,11 @@ type EntityField struct {
 	Getter                  string
 }
 
-func NewEntity(def *definition.Entity, serviceName, destination string) *Entity {
+func NewEntity(def *definition.Entity, info *ServiceInfo) *Entity {
 	entity := &Entity{}
 	importSet := make(map[string]bool)
-	entity.ImportPath = filepath.Join(serviceName, "internal/domain/entity")
-	entity.FilePath = filepath.Join(destination, "internal/domain/entity", def.Name+".go")
+	entity.ImportPath = filepath.Join(info.Name, "internal/domain/entity")
+	entity.FilePath = filepath.Join(info.Destination, "internal/domain/entity", def.Name+".go")
 	entity.Name = GetPublicName(def.Name)
 	entity.ImportPackages = make([]string, 0)
 	entity.Field = make([]*EntityField, 0, len(def.Field))

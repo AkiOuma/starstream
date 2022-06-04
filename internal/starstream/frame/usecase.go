@@ -13,13 +13,13 @@ type Usecase struct {
 	Entity               *Entity
 }
 
-func NewUsecase(e *Entity, serviceName, destination string) *Usecase {
+func NewUsecase(e *Entity, info *ServiceInfo) *Usecase {
 	u := &Usecase{}
 	u.Name = e.Name
 	u.Entity = e
 	u.ImplName = strings.ToLower(e.Name)
-	u.ImportPath = filepath.Join(serviceName, "internal/usecase")
-	u.FilePath = filepath.Join(destination, "internal/usecase", u.ImplName+".go")
+	u.ImportPath = filepath.Join(info.Name, "internal/usecase")
+	u.FilePath = filepath.Join(info.Destination, "internal/usecase", u.ImplName+".go")
 	u.ImportPackages = make([]string, 0, 5)
 	u.ImportPackages = append(u.ImportPackages,
 		"context",

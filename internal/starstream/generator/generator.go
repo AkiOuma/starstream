@@ -26,7 +26,7 @@ func (g *Generator) Launch() {
 	}
 	// init go mod
 	if err := g.initGoModule(); err != nil {
-		log.Printf("ERROR: init go module %s failed because: %v", g.frame.ServiceName, err)
+		log.Printf("ERROR: init go module %s failed because: %v", g.frame.ServiceInfo.Name, err)
 	}
 	// build internal
 	if err := g.buildInternal(); err != nil {
@@ -35,9 +35,9 @@ func (g *Generator) Launch() {
 }
 
 func (g *Generator) initGoModule() (err error) {
-	cmd := exec.Command("go", "mod", "init", g.frame.ServiceName)
+	cmd := exec.Command("go", "mod", "init", g.frame.ServiceInfo.Name)
 	cmd.Dir = g.frame.Destination
-	log.Printf("go: creating new go.mod: module %s", g.frame.ServiceName)
+	log.Printf("go: creating new go.mod: module %s", g.frame.ServiceInfo.Name)
 	output, err := cmd.Output()
 	if err != nil {
 		return

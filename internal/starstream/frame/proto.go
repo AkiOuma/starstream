@@ -1,9 +1,5 @@
 package frame
 
-import (
-	"github.com/AkiOuma/starstream/internal/starstream/definition"
-)
-
 type Proto struct {
 	FilePath       string
 	Package        string
@@ -22,7 +18,7 @@ type ProtoField struct {
 	Getter string
 }
 
-func NewProto(def *definition.Entity, serviceName, destination string) *Proto {
+func NewProto(def *Entity, info *ServiceInfo) *Proto {
 	importSet := make(map[string]bool)
 	proto := &Proto{}
 	proto.Name = GetPublicName(def.Name)
@@ -34,10 +30,10 @@ func NewProto(def *definition.Entity, serviceName, destination string) *Proto {
 		}
 		proto.Field = append(proto.Field, &ProtoField{
 			Id:     i + 1,
-			Name:   v.Name,
+			Name:   v.PrivateName,
 			Root:   v.Root,
 			Type:   fieldType.TypeName,
-			Getter: "Get" + GetPublicName(v.Name) + "()",
+			Getter: "Get" + v.PublicName + "()",
 		})
 		if len(fieldType.ImportPackage) > 0 && !importSet[fieldType.ImportPackage] {
 			proto.ImportPackages = append(proto.ImportPackages, fieldType.ImportPackage)

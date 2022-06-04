@@ -20,11 +20,11 @@ type ValueObjectField struct {
 	Type string
 }
 
-func NewValueObject(def *definition.Entity, serviceName, destination string) *ValueObject {
+func NewValueObject(def *definition.Entity, info *ServiceInfo) *ValueObject {
 	importSet := make(map[string]bool)
 	vo := &ValueObject{}
-	vo.ImportPath = filepath.Join(serviceName, "internal/domain/valueobject")
-	vo.FilePath = filepath.Join(destination, "internal/domain/valueobject", def.Name+".go")
+	vo.ImportPath = filepath.Join(info.Name, "internal/domain/valueobject")
+	vo.FilePath = filepath.Join(info.Destination, "internal/domain/valueobject", def.Name+".go")
 	vo.Name = GetPublicName(def.Name)
 	vo.Field = make([]*ValueObjectField, 0, len(def.Field))
 	vo.ImportPackages = make([]string, 0)

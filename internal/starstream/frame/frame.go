@@ -3,32 +3,42 @@ package frame
 import "github.com/AkiOuma/starstream/internal/starstream/definition"
 
 type Frame struct {
-	ServiceName string
+	*ServiceInfo
+	Entity []*Entity
+	Proto  []*Proto
+}
+
+type ServiceInfo struct {
+	Name        string
 	Destination string
-	Entity      []*Entity
-	Proto       []*Proto
+	Version     string
+	Type        string
 }
 
 func NewFrame(def *definition.Definition) *Frame {
 	f := &Frame{}
-	f.ServiceName = def.ServiceName
-	f.Destination = def.Destination
+	f.ServiceInfo = &ServiceInfo{
+		Name:        def.ServiceName,
+		Destination: def.Destination,
+		Version:     def.ApiVersion,
+		Type:        def.Type,
+	}
 	f.Entity = make([]*Entity, 0, len(def.Entity))
 	f.Proto = make([]*Proto, 0, len(def.Entity))
 	for _, v := range def.Entity {
-		entity := NewEntity(v, f.ServiceName, f.Destination)
-		vo := NewValueObject(v, f.ServiceName, f.Destination)
+		entity := NewEntity(v, f.ServiceInfo)
+		vo := NewValueObject(v, f.ServiceInfo)
 		querier := NewValueObjectQuerier(v)
 		vo.SetQuerier(querier)
 		entity.SetValueObject(vo)
-		repo := NewRepository(entity, f.ServiceName, f.Destination)
+		repo := NewRepository(entity, f.ServiceInfo)
 		entity.SetRepository(repo)
-		service := NewService(entity, f.ServiceName, f.Destination)
+		service := NewService(entity, f.ServiceInfo)
 		entity.Service = service
-		usecase := NewUsecase(entity, f.ServiceName, f.Destination)
+		usecase := NewUsecase(entity, f.ServiceInfo)
 		entity.Usecase = usecase
 
-		proto := NewProto(v, def.ServiceName, def.Destination)
+		proto := NewProto(entity, f.ServiceInfo)
 		protoQuerier := NewProtoQuerier(v)
 		proto.Querier = protoQuerier
 

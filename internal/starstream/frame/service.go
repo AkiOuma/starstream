@@ -12,12 +12,12 @@ type Service struct {
 	Repository           *Repository
 }
 
-func NewService(entity *Entity, serviceName, destination string) *Service {
+func NewService(entity *Entity, info *ServiceInfo) *Service {
 	s := &Service{}
 	s.Name = entity.Name
 	s.ImplName = strings.ToLower(entity.Name)
-	s.ImportPath = filepath.Join(serviceName, "internal/domain/service")
-	s.FilePath = filepath.Join(destination, "internal/domain/service", strings.ToLower(entity.Name)+".go")
+	s.ImportPath = filepath.Join(info.Name, "internal/domain/service")
+	s.FilePath = filepath.Join(info.Destination, "internal/domain/service", strings.ToLower(entity.Name)+".go")
 	s.ImportPackages = make([]string, 0, 1)
 	s.ImportPackages = append(s.ImportPackages, entity.Repository.ImportPath)
 	s.Repository = entity.Repository

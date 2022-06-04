@@ -30,11 +30,11 @@ func NewFindResult(entity *Entity) *FindResult {
 	return r
 }
 
-func NewRepository(entity *Entity, serviceName, destination string) *Repository {
+func NewRepository(entity *Entity, info *ServiceInfo) *Repository {
 	r := &Repository{}
 	r.Name = entity.Name
-	r.ImportPath = filepath.Join(serviceName, "internal/domain/repository")
-	r.FilePath = filepath.Join(destination, "internal/domain/repository", strings.ToLower(entity.Name)+".go")
+	r.ImportPath = filepath.Join(info.Name, "internal/domain/repository")
+	r.FilePath = filepath.Join(info.Destination, "internal/domain/repository", strings.ToLower(entity.Name)+".go")
 	r.Method = make([]*Method, 0, 3)
 	r.ImportPackages = make([]string, 0)
 	r.ImportPackages = append(r.ImportPackages, "context")
