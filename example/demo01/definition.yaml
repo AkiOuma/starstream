@@ -1,0 +1,32 @@
+destination: /root/tool/go/flame/starstream/example/demo01
+serviceName: github.com/AkiOuma/demo01
+type: serivce
+apiVersion: v1
+thirdPartyProto:
+  - google/protobuf/timestamp.proto
+entity:
+  - name: user
+    field:
+      - name: id
+        type: int
+        root: true
+      - name: name
+        type: string
+      - name: height
+        type: float
+      - name: group
+        type: int
+      - name: createdAt
+        type: time
+      - name: updatedAt
+        type: time
+config:
+  transport:
+    grpc:
+      addr: localhost:8080
+  datasource:
+    sqldb:
+      host: localhost
+      port: 3306
+      user: root
+      database: user
