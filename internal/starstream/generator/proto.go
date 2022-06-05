@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
 
@@ -16,9 +17,15 @@ func (g *Generator) buildProto(proto *frame.Proto) error {
 	if err := os.MkdirAll(folder, os.ModePerm); err != nil {
 		return err
 	}
+	if err := os.MkdirAll(proto.CompliedFolderPath, os.ModePerm); err != nil {
+		return err
+	}
 	importPackages := bytes.NewBufferString("")
 	for _, v := range proto.ImportPackages {
 		importPackages.WriteString(fmt.Sprintf("import \"%s\";\n", v))
+		if err := g.setThirdPartyProtoFIles(v); err != nil {
+			return err
+		}
 	}
 	content := fmt.Sprintf(
 		template.ProtoTemplate,
@@ -49,19 +56,23 @@ func protoQuerierField(querier *frame.ProtoQuerier) string {
 	return fields.String()
 }
 
-// var ProtoEntityTemplate = `syntax = "proto3";
-
-// package %s;
-
-// option go_package = "%s";
-
-// %s
-
-// message %s {
-// %s
-// }
-
-// message %s {
-// %s
-// }
-// `
+func (g *Generator) setThirdPartyProtoFIles(moduleName string) error {
+	dest := filepath.Join(
+		g.frame.Destination,
+		"third_party",
+		filepath.Dir(moduleName),
+	)
+	if err := os.MkdirAll(dest, os.ModePerm); err != nil {
+		log.Fatalf("ERROR: Generate %s failed because: %v", dest, err)
+	}
+	var protoContent string
+	switch moduleName {
+	case "google/protobuf/timestamp.proto":
+		protoContent = template.GoogleTimeStamp
+	}
+	return ioutil.WriteFile(
+		filepath.Join(dest, filepath.Base(moduleName)),
+		[]byte(protoContent),
+		0644,
+	)
+}

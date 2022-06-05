@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package demo01.serivce.v1;
+package demo01.service.v1;
 
-option go_package = "demo01/serivce/v1";
+option go_package = "demo01/service/v1";
 
 import "google/protobuf/timestamp.proto";
 

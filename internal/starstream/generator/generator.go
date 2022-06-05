@@ -1,12 +1,15 @@
 package generator
 
 import (
+	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
 
 	"github.com/AkiOuma/starstream/internal/starstream/frame"
+	"github.com/AkiOuma/starstream/internal/starstream/template"
 )
 
 type Generator struct {
@@ -24,6 +27,15 @@ func (g *Generator) Launch() {
 	if err := os.MkdirAll(g.frame.Destination, os.ModePerm); err != nil {
 		log.Fatalf("ERROR: Generate %s failed because: %v", g.frame.Destination, err)
 	}
+	// Makefile
+	if err := ioutil.WriteFile(
+		filepath.Join(g.frame.Destination, "Makefile"),
+		[]byte(fmt.Sprintf(template.MakefileTemplate, g.frame.ServiceInfo.BriefServiceName)),
+		0644,
+	); err != nil {
+		log.Fatalf("ERROR: Generate Makefile failed because: %v", err)
+	}
+
 	// init go mod
 	if err := g.initGoModule(); err != nil {
 		log.Printf("ERROR: init go module %s failed because: %v", g.frame.ServiceInfo.Name, err)
@@ -32,6 +44,27 @@ func (g *Generator) Launch() {
 	if err := g.buildInternal(); err != nil {
 		log.Fatalf("ERROR: build internal failed because: %v", err)
 	}
+	// compliing protobuf
+	if err := g.compliePb(); err != nil {
+		log.Fatalf(err.Error())
+	}
+
+	// tidy
+	if err := g.goModTidy(); err != nil {
+		log.Fatalf(err.Error())
+	}
+}
+
+func (g *Generator) compliePb() error {
+	cmd := exec.Command("make", "protoc")
+	cmd.Dir = g.frame.Destination
+	return cmd.Run()
+}
+
+func (g *Generator) goModTidy() error {
+	cmd := exec.Command("go", "mod", "tidy")
+	cmd.Dir = g.frame.Destination
+	return cmd.Run()
 }
 
 func (g *Generator) initGoModule() (err error) {

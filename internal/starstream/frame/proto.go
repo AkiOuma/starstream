@@ -7,13 +7,14 @@ import (
 )
 
 type Proto struct {
-	FilePath       string
-	Package        string
-	GoPackage      string
-	ImportPackages []string
-	Name           string
-	Field          []*ProtoField
-	Querier        *ProtoQuerier
+	FilePath           string
+	CompliedFolderPath string
+	Package            string
+	GoPackage          string
+	ImportPackages     []string
+	Name               string
+	Field              []*ProtoField
+	Querier            *ProtoQuerier
 	*ServiceInfo
 }
 
@@ -30,6 +31,7 @@ func NewProto(entity *Entity, info *ServiceInfo) *Proto {
 	proto := &Proto{}
 	proto.ServiceInfo = info
 	proto.FilePath = filepath.Join(info.Destination, "api/proto", info.BriefServiceName, info.Type, info.Version, strings.ToLower(entity.Name)+".proto")
+	proto.CompliedFolderPath = filepath.Join(info.Destination, "api/goapi", info.BriefServiceName, info.Type, info.Version)
 	proto.Name = GetPublicName(entity.Name)
 	proto.Field = make([]*ProtoField, 0, len(entity.Field))
 	proto.Package = fmt.Sprintf("%s.%s.%s", info.BriefServiceName, info.Type, info.Version)

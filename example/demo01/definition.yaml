@@ -1,6 +1,6 @@
 destination: /root/tool/go/flame/starstream/example/demo01
 serviceName: github.com/AkiOuma/demo01
-type: serivce
+type: service
 apiVersion: v1
 thirdPartyProto:
   - google/protobuf/timestamp.proto
