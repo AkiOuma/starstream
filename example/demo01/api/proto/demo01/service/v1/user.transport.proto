@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package demo01.service.v1;
+
+option go_package = "demo01/service/v1";
+
+import "user.proto";
+
+service Transport {
+	rpc FindUsers(FindUsersRequest) returns (FindUsersReply) {};
+	rpc SaveUsers(SaveUsersRequest) returns (SaveUsersReply) {};
+	rpc RemoveUsers(RemoveUsersRequest) returns (RemoveUsersReply) {};
+}
+
+message FindUsersRequest {
+	demo01.service.v1.UserQuerier	querier = 1;
+}
+message FindUsersReply {
+	int32	count = 1;
+	repeated demo01.service.v1.User	data = 2;
+}
+message SaveUsersRequest {
+	repeated demo01.service.v1.User	data = 1;
+}
+message SaveUsersReply {
+	repeated demo01.service.v1.User	data = 1;
+}
+message RemoveUsersRequest {
+	demo01.service.v1.UserQuerier	querier = 1;
+}
+message RemoveUsersReply {
+}
+

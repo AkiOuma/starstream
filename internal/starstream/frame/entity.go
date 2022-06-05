@@ -16,6 +16,7 @@ type Entity struct {
 	Repository           *Repository
 	Service              *Service
 	Usecase              *Usecase
+	Transport            *Transport
 }
 
 type EntityField struct {

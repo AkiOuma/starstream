@@ -48,10 +48,14 @@ func NewFrame(def *definition.Definition) *Frame {
 		entity.Service = service
 		usecase := NewUsecase(entity, f.ServiceInfo)
 		entity.Usecase = usecase
+		transport := NewTransport(entity, usecase, vo, f.ServiceInfo)
+		entity.Transport = transport
 
 		proto := NewProto(entity, f.ServiceInfo)
 		protoQuerier := NewProtoQuerier(proto)
 		proto.Querier = protoQuerier
+		protoTransport := NewProtoTransport(entity, proto)
+		proto.Transport = protoTransport
 
 		f.Entity = append(f.Entity, entity)
 		f.Proto = append(f.Proto, proto)

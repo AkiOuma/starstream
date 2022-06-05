@@ -43,7 +43,7 @@ func NewProtoQuerier(proto *Proto) *ProtoQuerier {
 			})
 			q.Field = append(q.Field, &ProtoQuerierField{
 				Id:   i + 2,
-				Name: "Search" + v.Name,
+				Name: "Search" + GetPublicName(v.Name),
 				Type: "string",
 			})
 			i += 2

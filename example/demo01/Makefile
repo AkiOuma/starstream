@@ -11,6 +11,7 @@ MYSQL_PASSWORD = 000000
 # build proto files to go files
 protoc:
 	protoc -I=third_party --proto_path=$(PROTO_PATH) --go_out=$(GOAPI_PATH) --go_opt=paths=source_relative --go-grpc_out=$(GOAPI_PATH) --go-grpc_opt=paths=source_relative $(PROTO_PATH)*.proto
+	protoc --go_out=. --go_opt=paths=source_relative ${CONFIG_PATH}*.proto
 
 # build application object
 wire:

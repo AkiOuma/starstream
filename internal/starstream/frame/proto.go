@@ -15,6 +15,7 @@ type Proto struct {
 	Name               string
 	Field              []*ProtoField
 	Querier            *ProtoQuerier
+	Transport          *ProtoTransport
 	*ServiceInfo
 }
 

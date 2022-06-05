@@ -12,6 +12,10 @@ import (
 	"github.com/AkiOuma/starstream/internal/starstream/template"
 )
 
+var thirdPartySet = map[string]bool{
+	"google/protobuf/timestamp.proto": true,
+}
+
 func (g *Generator) buildProto(proto *frame.Proto) error {
 	folder := filepath.Dir(proto.FilePath)
 	if err := os.MkdirAll(folder, os.ModePerm); err != nil {
@@ -57,6 +61,10 @@ func protoQuerierField(querier *frame.ProtoQuerier) string {
 }
 
 func (g *Generator) setThirdPartyProtoFIles(moduleName string) error {
+
+	if !thirdPartySet[moduleName] {
+		return nil
+	}
 	dest := filepath.Join(
 		g.frame.Destination,
 		"third_party",

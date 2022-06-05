@@ -44,6 +44,9 @@ func (g *Generator) Launch() {
 	if err := g.buildInternal(); err != nil {
 		log.Fatalf("ERROR: build internal failed because: %v", err)
 	}
+	// build api
+	g.buildApi()
+
 	// compliing protobuf
 	if err := g.compliePb(); err != nil {
 		log.Fatalf(err.Error())
@@ -84,6 +87,21 @@ func (g *Generator) buildInternal() error {
 		return err
 	}
 	return nil
+}
+
+func (g *Generator) buildApi() {
+	for _, v := range g.frame.Proto {
+		folder := filepath.Dir(v.FilePath)
+		if err := os.MkdirAll(folder, os.ModePerm); err != nil {
+			log.Fatalf("ERROR: Generate %s failed because: %v", folder, err)
+		}
+		if err := g.buildProto(v); err != nil {
+			log.Fatalf("ERROR: Generate proto %s failed because: %v", v.FilePath, err)
+		}
+		if err := g.buildProtoTransport(v.Transport); err != nil {
+			log.Fatalf("ERROR: Generate transport %s failed because: %v", v.FilePath, err)
+		}
+	}
 }
 
 func (g *Generator) buildDomain() error {
@@ -128,14 +146,14 @@ func (g *Generator) buildDomain() error {
 		if err := g.buildUsecase(v.Usecase); err != nil {
 			log.Fatalf("ERROR: Generate service %s failed because: %v", v.Usecase.FilePath, err)
 		}
-	}
-	for _, v := range g.frame.Proto {
-		folder := filepath.Dir(v.FilePath)
-		if err := os.MkdirAll(folder, os.ModePerm); err != nil {
-			log.Fatalf("ERROR: Generate %s failed because: %v", folder, err)
+
+		// transport
+		transportFolder := filepath.Dir(v.Transport.Helper.FilePath)
+		if err := os.MkdirAll(transportFolder, os.ModePerm); err != nil {
+			log.Fatalf("ERROR: Generate %s failed because: %v", transportFolder, err)
 		}
-		if err := g.buildProto(v); err != nil {
-			log.Fatalf("ERROR: Generate service %s failed because: %v", v.FilePath, err)
+		if err := g.buildTransportHelper(v.Transport.Helper); err != nil {
+			log.Fatalf("ERROR: Generate transport helper %s failed because: %v", v.Transport.Helper.FilePath, err)
 		}
 	}
 	return nil

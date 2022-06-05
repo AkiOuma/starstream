@@ -20,7 +20,7 @@ message UserQuerier {
 	int32	idLower = 2;
 	int32	idUpper = 3;
 	repeated string	name = 4;
-	string	Searchname = 5;
+	string	SearchName = 5;
 	double	heightLower = 6;
 	double	heightUpper = 7;
 	repeated int32	group = 8;
